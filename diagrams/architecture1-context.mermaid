@@ -1,0 +1,17 @@
+graph TB
+    subgraph "Provider Switcher - Context"
+        User[📱 User<br/>Deposits Money]
+        PaymentSystem[💲 Provider Switcher<br/> in NestJS]
+        ProviderA[Payments Provider A<br/>Main]
+        ProviderB[Payments Provider B<br/>Backup 1]
+        ProviderC[Payments Provider C<br/>Backup 2]
+        DB[(💾 SQLite<br/>Providers & Transactions)]
+        Monitoring[📊 Monitoring System<br/>Structured Logs]
+    end
+    
+    User -->|POST /payments| PaymentSystem
+    PaymentSystem -.->|1- Primary Attempt| ProviderA
+    PaymentSystem -.->|2- If A fails| ProviderB
+    PaymentSystem -.->|3- If B fails| ProviderC
+    PaymentSystem -->|Persists data| DB
+    PaymentSystem -->|Sends logs| Monitoring
