@@ -1,0 +1,156 @@
+{
+  "uuid": "cffbdfb3-9cb0-4e30-b23b-07a50920b038",
+  "lastMigration": 33,
+  "name": "ProviderC Backup Faulty",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3004,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "47e1d706-daa9-4526-940c-0da43cc8ee4c",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "pagos",
+      "responses": [
+        {
+          "uuid": "52602bf2-4f08-4624-8e7e-d0c8b02c7c43",
+          "body": "{\n  \"transaction_id\": \"{{ faker 'string.uuid' }}\",\n  \"status\": \"ok\",\n  \"amount\": \"{{body 'amount'}}\",\n  \"provider\": \"ProviderC\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "latency": 3000,
+          "statusCode": 200,
+          "label": "OK",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "ok",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "7800368a-aa1d-4095-b1c5-2382e32b4e4f",
+          "body": "{}",
+          "latency": 150,
+          "statusCode": 422,
+          "label": "Unprocessable Entity",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "unprocessable-entity",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "9c78f581-6b33-4f9b-80c2-b3f83f99973a",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 504,
+          "label": "Gateway Timeout",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "gateway-timeout",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "47e1d706-daa9-4526-940c-0da43cc8ee4c"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}

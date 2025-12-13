@@ -1,0 +1,156 @@
+{
+  "uuid": "c2e32a54-9154-4e0d-91a2-ab7abbc1fc84",
+  "lastMigration": 33,
+  "name": "ProviderB Backup Regular",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3003,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "2b546521-671e-4abc-bfd0-69bb71548b9d",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "payments",
+      "responses": [
+        {
+          "uuid": "3c8520d4-844a-46d8-8b0c-f245a49631c6",
+          "body": "{\n  \"transaction_id\": \"{{ faker 'string.uuid' }}\",\n  \"status\": \"approved\",\n  \"amount\": \"{{body 'amount'}}\",\n  \"provider\": \"ProviderB\",\n  \"timestamp\": \"{{now}}\",\n}",
+          "latency": 1500,
+          "statusCode": 200,
+          "label": "Approved",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "approved",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "dfa87be3-19ed-4b15-a0d8-c0c625f5bad3",
+          "body": "{\n  \"error\": \"service_unavailable\",\n  \"message\": \"Provider temporarily unavailable\",\n  \"retry_after\": 30,\n}",
+          "latency": 200,
+          "statusCode": 503,
+          "label": "Service Unavailable",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "service-unavailable",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "04d36cae-d239-4058-a8a2-9af3567503da",
+          "body": "{}",
+          "latency": 200,
+          "statusCode": 429,
+          "label": "Rate Limit Exceeded",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "scenario",
+              "value": "rate-limit-exceeded",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "2b546521-671e-4abc-bfd0-69bb71548b9d"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
