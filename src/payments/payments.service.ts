@@ -1,16 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { CreatePaymentDto } from "src/common/dto/payment.dto";
+import { ProviderAService } from "src/providers/provider-a.service";
 
 @Injectable()
 export class PaymentsService {
+
+    constructor(private readonly providerA: ProviderAService) {}
+
     async processPayment(paymentDto: CreatePaymentDto) {
-        return {
-            transactionId: 'txn_1234567890',
-            status: 'success',
-            amount: paymentDto.amount,
-            currency: paymentDto.currency,
-            provider: 'ProviderA',
-            timestamp: new Date()
-        };
+        return this.providerA.processPayment(paymentDto);
     }
 }
