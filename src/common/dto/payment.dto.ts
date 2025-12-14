@@ -3,6 +3,8 @@ export class CreatePaymentDto {
     currency: string;
     customerId: string;
     customerEmail: string;
+    scenario?: 'approved' | 'rate-limit-exceeded' | 'unprocessable-entity'
+        | 'internal-server-error' | 'service-unavailable';
 }
 
 export class PaymentResponseDto {
