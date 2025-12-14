@@ -14,5 +14,4 @@ export class PaymentResponseDto {
     currency: string;
     provider: string;
     timestamp: Date;
-    confirmationCode?: string;
 }

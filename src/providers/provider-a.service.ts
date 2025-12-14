@@ -6,6 +6,7 @@ import { IPaymentProvider } from "src/common/interfaces/payment-provider.interfa
 @Injectable()
 export class ProviderAService implements IPaymentProvider {
     private readonly apiURL = 'http://localhost:3002/api/v1/payments';
+    private readonly DEFAULT_SCENARIO = 'approved';
 
     constructor(private readonly httpService: HttpService) {}
 
@@ -25,7 +26,7 @@ export class ProviderAService implements IPaymentProvider {
                 customer: {
                     id: payment.customerId,
                 },
-                scenario: 'approved'
+                scenario: payment.scenario || this.DEFAULT_SCENARIO
             };
 
             const response = await this.httpService.axiosRef.post(

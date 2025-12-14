@@ -58,7 +58,7 @@ export class ProviderCService implements IPaymentProvider {
                 errorDetails.push(`URL: ${error.config.url}`);
             }
             
-            throw new Error(`Provider A failed - ${errorDetails.join(', ')}`);
+            throw new Error(`Provider C failed - ${errorDetails.join(', ')}`);
         }
     }
 }

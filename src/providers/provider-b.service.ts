@@ -20,7 +20,7 @@ export class ProviderBService implements IPaymentProvider {
 
     async processPayment(payment: CreatePaymentDto): Promise<PaymentResponseDto> {
         try {
-            const providerAFormat = {
+            const providerBFormat = {
                 amount: payment.amount,
                 currency: payment.currency,
                 customer: {
@@ -31,8 +31,9 @@ export class ProviderBService implements IPaymentProvider {
 
             const response = await this.httpService.axiosRef.post(
                 this.apiURL,
-                providerAFormat,
+                providerBFormat,
             )
+            console.log('Provider B response:', response.data);
             return {
                 transactionId: response.data.transaction_id,
                 status: 'success',
@@ -58,7 +59,7 @@ export class ProviderBService implements IPaymentProvider {
                 errorDetails.push(`URL: ${error.config.url}`);
             }
             
-            throw new Error(`Provider A failed - ${errorDetails.join(', ')}`);
+            throw new Error(`Provider B failed - ${errorDetails.join(', ')}`);
         }
     }
 }
