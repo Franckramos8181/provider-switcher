@@ -1,0 +1,51 @@
+erDiagram
+    PAYMENT_TRANSACTIONS ||--o{ TRANSACTION_ATTEMPTS : "has_many"
+    PAYMENT_TRANSACTIONS }o--|| PAYMENT_PROVIDERS : "used_provider"
+    TRANSACTION_ATTEMPTS }o--|| PAYMENT_PROVIDERS : "attempted_with"
+    PROVIDER_HEALTH_CHECKS }o--|| PAYMENT_PROVIDERS : "checks"
+    
+    PAYMENT_TRANSACTIONS {
+        uuid id PK "Primary key"
+        string transaction_id UK "Unique transaction identifier"
+        string customer_id "Customer identifier"
+        string customer_email "Customer email"
+        decimal amount "Payment amount"
+        string currency "Currency code (USD, EUR, etc)"
+        string status "success, failed, pending"
+        uuid final_provider_id FK "Provider that successfully processed"
+        int retry_count "Number of retries"
+        timestamp created_at "Transaction creation time"
+        timestamp completed_at "Transaction completion time"
+    }
+
+    TRANSACTION_ATTEMPTS {
+        uuid id PK "Primary key"
+        uuid transaction_id FK "Reference to transaction"
+        uuid provider_id FK "Provider used in this attempt"
+        int attempt_number "Sequential attempt number (1, 2, 3)"
+        string status "success, failed, timeout"
+        string error_message "Error message if failed"
+        timestamp attempted_at "When attempt was made"
+    }
+
+    PAYMENT_PROVIDERS {
+        uuid id PK "Primary key"
+        string name UK "Provider name (Provider A, B, C)"
+        string code UK "Provider code (PROVIDER_A, PROVIDER_B, PROVIDER_C)"
+        int priority "Provider priority (1=primary, 2=secondary, 3=tertiary)"
+        boolean is_active "Provider is enabled"
+        boolean is_healthy "Current health status"
+        timestamp last_health_check "Last health check time"
+        int consecutive_failures "Consecutive failure count"
+        int consecutive_success_checks "Consecutive successful health checks"
+        timestamp marked_unhealthy_at "When provider was marked unhealthy"
+        timestamp recovered_at "When provider recovered to healthy"
+    }
+
+    PROVIDER_HEALTH_CHECKS {
+        uuid id PK "Primary key"
+        uuid provider_id FK "Provider being checked"
+        string status "healthy, down"
+        string error_message "Error if health check failed"
+        timestamp checked_at "When check was performed"
+    }
