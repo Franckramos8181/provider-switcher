@@ -1,9 +1,9 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { CreatePaymentDto, PaymentResponseDto } from "src/common/dto/payment.dto";
-import { IPaymentProvider } from "src/common/interfaces/payment-provider.interface";
-import { retry } from "src/common/utils/retry.util";
-import { CustomLogger } from "src/common/logger/custom-logger.service";
+import { CreatePaymentDto, PaymentResponseDto } from "../common/dto/payment.dto";
+import { IPaymentProvider } from "../common/interfaces/payment-provider.interface";
+import { retry } from "../common/utils/retry.util";
+import { CustomLogger } from "../common/logger/custom-logger.service";
 
 @Injectable()
 export class ProviderCService implements IPaymentProvider {
