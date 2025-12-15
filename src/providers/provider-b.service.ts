@@ -3,13 +3,17 @@ import { Injectable } from "@nestjs/common";
 import { CreatePaymentDto, PaymentResponseDto } from "src/common/dto/payment.dto";
 import { IPaymentProvider } from "src/common/interfaces/payment-provider.interface";
 import { retry } from "src/common/utils/retry.util";
+import { CustomLogger } from "src/common/logger/custom-logger.service";
 
 @Injectable()
 export class ProviderBService implements IPaymentProvider {
     private readonly apiURL = 'http://localhost:3003/payments';
     private readonly DEFAULT_SCENARIO = 'approved';
 
-    constructor(private readonly httpService: HttpService) {}
+    constructor(
+        private readonly httpService: HttpService,
+        private readonly logger: CustomLogger,
+    ) {}
 
     getName(): string {
         return 'ProviderB';
@@ -20,6 +24,8 @@ export class ProviderBService implements IPaymentProvider {
     }
 
     async processPayment(payment: CreatePaymentDto): Promise<PaymentResponseDto> {
+        this.logger.debug('Starting payment with ProviderB', 'ProviderBService');
+
         return retry(
             1,    // maxAttempts
             500, // initialDelayMs
@@ -37,7 +43,12 @@ export class ProviderBService implements IPaymentProvider {
                     const response = await this.httpService.axiosRef.post(
                         this.apiURL,
                         providerBFormat,
-                    )
+                    );
+                    
+                    this.logger.log('Payment successful with ProviderB', 'ProviderBService', {
+                        transactionId: response.data.transaction_id,
+                    });
+                    
                     return {
                         transactionId: response.data.transaction_id,
                         status: 'success',
@@ -63,9 +74,25 @@ export class ProviderBService implements IPaymentProvider {
                         errorDetails.push(`URL: ${error.config.url}`);
                     }
                     
+                    this.logger.error(
+                        'Payment failed with ProviderB',
+                        error.stack,
+                        'ProviderBService',
+                        {
+                            amount: payment.amount,
+                            currency: payment.currency,
+                            httpStatus: error.response?.status,
+                            errorCode: error.code,
+                            errorMessage: error.message,
+                            url: this.apiURL,
+                        }
+                    );
+                    
                     throw new Error(errorDetails.join(', '));
                 }
-            }
+            },
+            this.logger,
+            'ProviderBService',
         );
     }
 }
