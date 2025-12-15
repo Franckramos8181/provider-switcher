@@ -4,33 +4,27 @@ import { IPaymentProvider } from 'src/common/interfaces/payment-provider.interfa
 import { ProviderAService } from 'src/providers/provider-a.service';
 import { ProviderBService } from 'src/providers/provider-b.service';
 import { ProviderCService } from 'src/providers/provider-c.service';
+import { ProviderHandler } from './chain/provider-handler';
 
 @Injectable()
 export class ProviderSwitcherService {
-  private providers: IPaymentProvider[];
+  private chain: ProviderHandler;
 
   constructor(
     providerA: ProviderAService,
     providerB: ProviderBService,
     providerC: ProviderCService,
   ) {
-    // Prioritized
-    this.providers = [providerA, providerB, providerC];
+    const handlerA = new ProviderHandler(providerA);
+    const handlerB = new ProviderHandler(providerB);
+    const handlerC = new ProviderHandler(providerC);
+
+    handlerA.setNext(handlerB).setNext(handlerC);
+
+    this.chain = handlerA
   }
 
   async executeWithFallback(payment: CreatePaymentDto): Promise<PaymentResponseDto> {
-    let lastError: Error | undefined;
-
-    for (const provider of this.providers) {
-      try {
-        console.log(`Trying ${provider.getName()}...`);
-        return await provider.processPayment(payment);
-      } catch (error) {
-        console.log(`${provider.getName()} failed: ${error.message}`);
-        lastError = error;
-      }
-    }
-
-    throw new Error(`All providers failed. Last error: ${lastError?.message || 'Unknown error'}`);
+    return this.chain.handle(payment);
   }
 }
