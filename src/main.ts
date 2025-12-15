@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CustomLogger } from './common/logger/custom-logger.service';
+import { SeedService } from './database/seed.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +13,10 @@ async function bootstrap() {
     port: process.env.PORT ?? 3000,
     nodeEnv: process.env.NODE_ENV || 'development',
   });
+
+  // Run database seeding
+  const seedService = app.get(SeedService);
+  await seedService.seedProviders();
 
   await app.listen(process.env.PORT ?? 3000);
   
