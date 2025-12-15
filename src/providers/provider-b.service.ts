@@ -33,7 +33,6 @@ export class ProviderBService implements IPaymentProvider {
                 this.apiURL,
                 providerBFormat,
             )
-            console.log('Provider B response:', response.data);
             return {
                 transactionId: response.data.transaction_id,
                 status: 'success',
@@ -59,7 +58,7 @@ export class ProviderBService implements IPaymentProvider {
                 errorDetails.push(`URL: ${error.config.url}`);
             }
             
-            throw new Error(`Provider B failed - ${errorDetails.join(', ')}`);
+            throw new Error(errorDetails.join(', '));
         }
     }
 }
