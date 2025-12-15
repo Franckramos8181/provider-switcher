@@ -20,7 +20,7 @@ export async function retry<T>(
 
             if (attempt < maxAttempts) {
                 console.log(
-                    `Attempt ${attempt}/${maxAttempts} failed. Retrying in ${currentDelay}ms...`
+                    `Attempt ${attempt}/${maxAttempts} failed. Retrying in ${currentDelay}ms…`
                 );
                 await new Promise(resolve => setTimeout(resolve, currentDelay));
                 currentDelay *= 2;

@@ -5,11 +5,13 @@ graph TB
     subgraph PaymentSystem["Payment Service<br/>[NestJS Application]"]
         API["PaymentsController<br/>[REST API /payments]<br/>"]
         
-        Orchestrator["PaymentsService<br/>[Service]<br/>Initiates payment processing"]
+        Orchestrator["PaymentsService<br/>[Service]<br/>Payment processing"]
         
-        Switcher["ProviderSwitcherService<br/>[Service]<br/>Manages chain execution"]
+        Switcher["ProviderSwitcherService<br/>[Service]<br/>Manages the chain"]
         
         ChainHandler["PaymentHandler<br/>[abstract]<br/><br/>Chain of Responsibility<br/>base class"]
+        
+        Exception["PaymentProvidersUnavailableException<br/>[Custom Exception]<br/>503 Service Unavailable"]
         
         subgraph Handlers["Handler Chain"]
             HA["ProviderHandler<br/>[Concrete Handler]<br/>Wraps ProviderAService"]
@@ -28,6 +30,8 @@ graph TB
     ChainHandler -.-> HA
     HA -->|"on failure"| HB
     HB -->|"on failure"| HC
+    HC -.->|"all failed"| Exception
+    Exception -.->|"503 response"| API
     
     HA -->|"HTTP Request"| ExtA
     HB -->|"HTTP Request"| ExtB
