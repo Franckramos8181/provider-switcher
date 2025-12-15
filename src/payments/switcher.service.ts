@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePaymentDto, PaymentResponseDto } from 'src/common/dto/payment.dto';
-import { IPaymentProvider } from 'src/common/interfaces/payment-provider.interface';
 import { ProviderAService } from 'src/providers/provider-a.service';
 import { ProviderBService } from 'src/providers/provider-b.service';
 import { ProviderCService } from 'src/providers/provider-c.service';
