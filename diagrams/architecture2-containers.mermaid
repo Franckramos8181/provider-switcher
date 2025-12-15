@@ -3,43 +3,33 @@ title: "C4 - Level 2: Containers"
 ---
 graph TB    
     subgraph PaymentSystem["Payment Service<br/>[NestJS Application]"]
-        API["REST API /payments<br/>[Controller]<br/>"]
+        API["PaymentsController<br/>[REST API /payments]<br/>"]
         
-        Orchestrator["Provider Switcher<br/>[Service]<br/>"]
+        Orchestrator["PaymentsService<br/>[Service]<br/>Initiates payment processing"]
         
-        ProviderStrategy["Provider Strategy<br/>[Strategy Pattern]<br/><br/>Abstraction for different<br/>implementations"]
+        Switcher["ProviderSwitcherService<br/>[Service]<br/>Manages chain execution"]
         
-        subgraph Providers["Concrete Implementations"]
-            PA["Provider A Service<br/>[Service]<br/>Main implementation"]
-            PB["Provider B Service<br/>[Service]<br/>Backup 1"]
-            PC["Provider C Service<br/>[Service]<br/>Backup 2"]
+        ChainHandler["PaymentHandler<br/>[abstract]<br/><br/>Chain of Responsibility<br/>base class"]
+        
+        subgraph Handlers["Handler Chain"]
+            HA["ProviderHandler<br/>[Concrete Handler]<br/>Wraps ProviderAService"]
+            HB["ProviderHandler<br/>[Concrete Handler]<br/>Wraps ProviderBService"]
+            HC["ProviderHandler<br/>[Concrete Handler]<br/>Wraps ProviderCService"]
         end
-        
-        Repository["Payment Repository<br/>[TypeORM Repository]<br/><br/>Data access with<br/>Repository pattern"]
-
-        ErrorHandler["Custom Error Handler<br/>[Exception Filter]<br/><br/>Structured errors"]
     end
-    
-    DB[("SQLite Database<br/><br/>- Transactions<br/>- Provider Status<br/>- Audit Logs")]
     
     ExtA["Provider A API<br/>[External REST API]"]
     ExtB["Provider B API<br/>[External REST API]"]
     ExtC["Provider C API<br/>[External REST API]"]
     
     API --> Orchestrator
-    Orchestrator --> ProviderStrategy
-    ProviderStrategy --> PA
-    ProviderStrategy --> PB
-    ProviderStrategy --> PC
+    Orchestrator --> Switcher
+    Switcher --> ChainHandler
+    ChainHandler -.-> HA
+    HA -->|"on failure"| HB
+    HB -->|"on failure"| HC
     
-    PA -->|"HTTP Request"| ExtA
-    PB -->|"HTTP Request"| ExtB
-    PC -->|"HTTP Request"| ExtC
-    
-    Orchestrator --> Repository
-    Repository -->|"SQL Queries"| DB
-    
-    API --> ErrorHandler
-    Orchestrator --> ErrorHandler
-    
-    
+    HA -->|"HTTP Request"| ExtA
+    HB -->|"HTTP Request"| ExtB
+    HC -->|"HTTP Request"| ExtC
+
