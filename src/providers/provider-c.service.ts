@@ -8,7 +8,7 @@ import { CustomLogger } from "../common/logger/custom-logger.service";
 @Injectable()
 export class ProviderCService implements IPaymentProvider {
     private readonly apiURL = 'http://localhost:3004/pagos';
-    private readonly DEFAULT_SCENARIO = 'approved';
+    private readonly DEFAULT_SCENARIO = 'ok';
 
     constructor(
         private readonly httpService: HttpService,
@@ -31,13 +31,16 @@ export class ProviderCService implements IPaymentProvider {
             500, // initialDelayMs
             async () => {
                 try {
+                    const scenario = payment.scenario || this.selectScenario();
+                    this.logger.debug(`Scenario selected for ProviderC: ${scenario}`);
+
                     const providerCFormat = {
                         amount: payment.amount,
                         currency: payment.currency,
                         customer: {
                             id: payment.customerId,
                         },
-                        scenario: payment.scenario || this.DEFAULT_SCENARIO
+                        scenario: scenario
                     };
 
                     const response = await this.httpService.axiosRef.post(
@@ -94,5 +97,17 @@ export class ProviderCService implements IPaymentProvider {
             this.logger,
             'ProviderCService',
         );
+    }
+
+    private selectScenario(): string {
+        const random = Math.random() * 100;
+        
+        if (random < 60) {
+            return 'ok';
+        } else if (random < 85) {
+            return 'unprocessable-entity';
+        } else {
+            return 'gateway-timeout';
+        }
     }
 }

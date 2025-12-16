@@ -31,13 +31,16 @@ export class ProviderBService implements IPaymentProvider {
             500, // initialDelayMs
             async () => {
                 try {
+                    const scenario = payment.scenario || this.selectScenario();
+                    this.logger.debug(`Scenario selected for ProviderB: ${scenario}`);
+
                     const providerBFormat = {
                         amount: payment.amount,
                         currency: payment.currency,
                         customer: {
                             id: payment.customerId,
                         },
-                        scenario: payment.scenario || this.DEFAULT_SCENARIO
+                        scenario: scenario
                     };
 
                     const response = await this.httpService.axiosRef.post(
@@ -94,5 +97,17 @@ export class ProviderBService implements IPaymentProvider {
             this.logger,
             'ProviderBService',
         );
+    }
+
+    private selectScenario(): string {
+        const random = Math.random() * 100;
+        
+        if (random < 70) {
+            return 'approved';
+        } else if (random < 90) {
+            return 'service-unavailable';
+        } else {
+            return 'rate-limit-exceeded';
+        }
     }
 }
