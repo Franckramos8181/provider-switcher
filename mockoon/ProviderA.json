@@ -44,7 +44,7 @@
         },
         {
           "uuid": "58c7a778-4917-43bf-864c-c74382e43ea9",
-          "body": "{\n  \"transaction_id\": \"{{faker 'string.uuid'}}\",\n  \"status\": \"approved\",\n  \"amount\": \"{{body 'amount'}}\",\n  \"provider\": \"ProviderA\",\n  \"timestamp\": \"{{now}}\"\n}",
+          "body": "{\n  \"transaction_id\": \"{{faker 'string.uuid'}}\",\n  \"status\": \"approved\",\n  \"amount\": \"{{ body 'amount' }}\",\n  \"currency\": \"{{ body 'currency' }}\",\n  \"provider\": \"ProviderA\",\n  \"timestamp\": \"{{now}}\"\n}",
           "latency": 1000,
           "statusCode": 200,
           "label": "Approved",
@@ -72,7 +72,7 @@
         {
           "uuid": "d4ea3b86-4775-428c-8caa-e4c1774c4a96",
           "body": "{\n  \"message\": \"This has timed out\"\n}",
-          "latency": 10000,
+          "latency": 3000,
           "statusCode": 504,
           "label": "Gateway Timeout",
           "headers": [],

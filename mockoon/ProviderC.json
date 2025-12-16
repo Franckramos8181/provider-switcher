@@ -72,7 +72,7 @@
         {
           "uuid": "9c78f581-6b33-4f9b-80c2-b3f83f99973a",
           "body": "{}",
-          "latency": 0,
+          "latency": 3000,
           "statusCode": 504,
           "label": "Gateway Timeout",
           "headers": [],
