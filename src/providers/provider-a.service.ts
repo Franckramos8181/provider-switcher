@@ -102,9 +102,9 @@ export class ProviderAService implements IPaymentProvider {
     private selectScenario(): string {
         const random = Math.random() * 100;
         
-        if (random < 80) {
+        if (random < 50) {
             return 'approved';
-        } else if (random < 90) {
+        } else if (random < 70) {
             return 'gateway-timeout';
         } else {
             return 'internal-server-error';

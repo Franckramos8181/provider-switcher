@@ -102,9 +102,9 @@ export class ProviderCService implements IPaymentProvider {
     private selectScenario(): string {
         const random = Math.random() * 100;
         
-        if (random < 60) {
+        if (random < 50) {
             return 'ok';
-        } else if (random < 85) {
+        } else if (random < 80) {
             return 'unprocessable-entity';
         } else {
             return 'gateway-timeout';

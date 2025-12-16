@@ -102,12 +102,12 @@ export class ProviderBService implements IPaymentProvider {
     private selectScenario(): string {
         const random = Math.random() * 100;
         
-        if (random < 70) {
+        if (random < 50) {
             return 'approved';
         } else if (random < 90) {
-            return 'service-unavailable';
-        } else {
             return 'rate-limit-exceeded';
+        } else {
+            return 'service-unavailable';
         }
     }
 }
