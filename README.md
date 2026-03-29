@@ -192,8 +192,3 @@ erDiagram
 ## License
 
 MIT License
-
-## Contact
-
-Leandro Guardia
-[@LinkedIn](https://linkedin.com/in/leandro-guardia) | [@X](https://x.com/leancontinuo)
